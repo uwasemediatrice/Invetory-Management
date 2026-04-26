@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Signup - IMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #eef4fc;
+            --ink: #12243a;
+            --muted: #4f6076;
+            --brand: #0f4c81;
+            --brand2: #1b7cc9;
+        }
+        body {
+            margin: 0;
+            font-family: 'Manrope', sans-serif;
+            color: var(--ink);
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 8% 8%, #dbeafe 0, rgba(219, 234, 254, 0) 34%),
+                radial-gradient(circle at 92% 22%, #fef3c7 0, rgba(254, 243, 199, 0) 26%),
+                var(--bg);
+            display: grid;
+            place-items: center;
+            padding: 1rem;
+        }
+        .auth-shell {
+            width: 100%;
+            max-width: 520px;
+            border-radius: 18px;
+            background: #fff;
+            border: 1px solid #d9e5f3;
+            box-shadow: 0 18px 45px rgba(16, 50, 84, 0.18);
+            overflow: hidden;
+        }
+        .auth-head {
+            background: linear-gradient(120deg, #0b3558, var(--brand), var(--brand2));
+            color: #fff;
+            padding: 1.25rem 1.4rem;
+        }
+        .auth-head h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .auth-body {
+            padding: 1.3rem 1.4rem 1.4rem;
+        }
+        .form-label {
+            font-weight: 700;
+            font-size: 0.92rem;
+        }
+        .form-control {
+            border-radius: 10px;
+            border-color: #cfdced;
+        }
+        .form-control:focus {
+            border-color: var(--brand2);
+            box-shadow: 0 0 0 0.2rem rgba(27, 124, 201, 0.2);
+        }
+        .btn-brand {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 0.62rem;
+            color: #fff;
+            background: linear-gradient(120deg, var(--brand), var(--brand2));
+            font-weight: 700;
+        }
+        .invalid-feedback {
+            display: block;
+        }
+        .helper {
+            color: var(--muted);
+            font-size: 0.86rem;
+        }
+        .status-note {
+            font-size: 0.84rem;
+            margin-top: 0.35rem;
+        }
+        .status-note.info {
+            color: #1b7cc9;
+        }
+        .status-note.error {
+            color: #dc3545;
+        }
+        .status-note.success {
+            color: #198754;
+        }
+    </style>
+</head>
+<body>
+<div class="auth-shell">
+    <div class="auth-head">
+        <h1>Create User Account</h1>
+    </div>
+    <div class="auth-body">
+         <form th:action="@{/signup}" method="post" novalidate>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label" for="fullName">Full name</label>
+                  <input id="fullName" name="fullName" type="text" class="form-control" placeholder="Your full name"
+                      th:value="${signupForm != null ? signupForm.fullName : ''}"
+                      th:classappend="${fullNameError != null} ? 'is-invalid' : ''">
+                  <div class="invalid-feedback" th:if="${fullNameError != null}" th:text="${fullNameError}"></div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label" for="username">Username</label>
+                  <input id="username" name="username" type="text" class="form-control" placeholder="e.g. john.smith"
+                      th:value="${signupForm != null ? signupForm.username : ''}"
+                      th:classappend="${usernameError != null} ? 'is-invalid' : ''">
+                  <div class="invalid-feedback" th:if="${usernameError != null}" th:text="${usernameError}"></div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label" for="email">Email</label>
+                  <input id="email" name="email" type="email" class="form-control" placeholder="you@example.com"
+                      th:value="${signupForm != null ? signupForm.email : ''}"
+                      th:classappend="${emailError != null} ? 'is-invalid' : ''">
+                  <div class="invalid-feedback" th:if="${emailError != null}" th:text="${emailError}"></div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label" for="password">Password</label>
+                  <input id="password" name="password" type="password" class="form-control" placeholder="Minimum 8 characters"
+                      th:classappend="${passwordError != null} ? 'is-invalid' : ''">
+                  <div class="invalid-feedback" th:if="${passwordError != null}" th:text="${passwordError}"></div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label" for="confirmPassword">Confirm password</label>
+                  <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" placeholder="Re-enter password"
+                      th:classappend="${confirmPasswordError != null} ? 'is-invalid' : ''">
+                  <div class="invalid-feedback" th:if="${confirmPasswordError != null}" th:text="${confirmPasswordError}"></div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-brand mt-3">Create Account</button>
+        </form>
+
+        <p class="helper mt-3 mb-0">Already registered? <a href="/login">Back to login</a></p>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+
