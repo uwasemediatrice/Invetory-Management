@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} != null ? ${title} + ' - IMS' : 'IMS'"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #0f4c81 0%, #1b7cc9 100%);
+        }
+        .sidebar {
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+        .main-content {
+            margin-left: 0;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        .stat-card {
+            border-left: 4px solid #1b7cc9;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #0f4c81 0%, #1b7cc9 100%);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1b7cc9 0%, #0f4c81 100%);
+        }
+        .table-hover tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        .badge-status-available {
+            background-color: #28a745;
+        }
+        .badge-status-assigned {
+            background-color: #007bff;
+        }
+        .badge-status-maintenance {
+            background-color: #ffc107;
+            color: #000;
+        }
+        .badge-status-damaged {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-laptop"></i> IMS
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="devicesDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-hdd-rack"></i> Devices
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="devicesDropdown">
+                            <li><a class="dropdown-item" href="/devices">View All</a></li>
+                            <li><a class="dropdown-item" href="/devices/register">Register Device</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="assignmentDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-check"></i> Assignments
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="assignmentDropdown">
+                            <li><a class="dropdown-item" href="/assignments">View All</a></li>
+                            <li><a class="dropdown-item" href="/assignments/assign">Assign Device</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="issuesDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-exclamation-triangle"></i> Issues
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="issuesDropdown">
+                            <li><a class="dropdown-item" href="/issues">View All</a></li>
+                            <li><a class="dropdown-item" href="/issues/report">Report Issue</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reports"><i class="bi bi-graph-up"></i> Reports</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid">
+        <!-- Flash Messages -->
+        <div class="row mt-3">
+            <div class="col-12" th:if="${success}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+            <div class="col-12" th:if="${error}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-circle"></i> <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div class="main-content">
+            <div th:replace="${content}"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light py-4 mt-5 border-top">
+        <div class="container-fluid text-center">
+            <p class="text-muted mb-0">
+                <i class="bi bi-shield-check"></i> IMS v1.0.0 | 
+                Offline Windows-based Inventory Management System
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-hide alerts after 5 seconds
+        document.querySelectorAll('.alert').forEach(function(alert) {
+            setTimeout(function() {
+                let bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }, 5000);
+        });
+    </script>
+<div th:if="${session.currentUser != null}" style="position: fixed; right: 16px; bottom: 16px; z-index: 1040; display: flex; gap: 8px; align-items: center; background: #ffffff; border: 1px solid #d0dff0; border-radius: 999px; padding: 6px 10px; box-shadow: 0 6px 18px rgba(16,50,84,0.18);">
+    <span style="font-size: 12px; color: #4d627c;" th:text="'User: ' + ${session.currentUser.username}">Admin</span>
+    <a href="/logout" class="btn btn-sm btn-outline-danger" style="border-radius: 999px;">Logout</a>
+</div>
+</body>
+</html>
+
+
+
+
+
+
